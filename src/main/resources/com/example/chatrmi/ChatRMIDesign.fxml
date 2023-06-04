@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="450.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <fx:include layoutX="165.0" source="Chat.fxml" />
+      <VBox alignment="TOP_CENTER" layoutY="45.0" prefHeight="351.0" prefWidth="165.0">
+         <children>
+            <fx:include source="ChatIndicator.fxml" />
+         </children></VBox>
+      <Separator layoutX="164.0" orientation="VERTICAL" prefHeight="400.0" prefWidth="0.0" />
+      <Separator layoutY="45.0" prefHeight="2.0" prefWidth="165.0" />
+      <Label layoutX="49.0" layoutY="15.0" prefHeight="16.0" prefWidth="107.0" text="Cliente 1" />
+      <ImageView fitHeight="28.0" fitWidth="32.0" layoutX="10.0" layoutY="8.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@avatar.png" />
+         </image>
+      </ImageView>
+   </children>
+</AnchorPane>
