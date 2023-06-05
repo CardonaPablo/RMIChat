@@ -7,20 +7,17 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="450.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.chatrmi.ui.client.ClientInterfaceController">
+<AnchorPane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="450.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.chatrmi.ui.client.ClientInterfaceController">
    <children>
-      <fx:include layoutX="165.0" source="Chat.fxml" />
-      <VBox alignment="TOP_CENTER" layoutY="45.0" prefHeight="351.0" prefWidth="165.0">
-         <children>
-            <fx:include source="ChatIndicator.fxml" />
-         </children></VBox>
+      <VBox fx:id="indicatorContainer" alignment="TOP_CENTER" layoutY="45.0" prefHeight="351.0" prefWidth="165.0" />
       <Separator layoutX="164.0" orientation="VERTICAL" prefHeight="400.0" prefWidth="0.0" />
       <Separator layoutY="45.0" prefHeight="2.0" prefWidth="165.0" />
-      <Label layoutX="49.0" layoutY="15.0" prefHeight="16.0" prefWidth="107.0" text="Cliente 1" />
+      <Label fx:id="nameLabel" layoutX="49.0" layoutY="15.0" prefHeight="16.0" prefWidth="107.0" text="Cliente 1" />
       <ImageView fitHeight="28.0" fitWidth="32.0" layoutX="10.0" layoutY="8.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@avatar.png" />
          </image>
       </ImageView>
+      <VBox fx:id="chatContainer" layoutX="166.0" prefHeight="400.0" prefWidth="285.0" />
    </children>
 </AnchorPane>

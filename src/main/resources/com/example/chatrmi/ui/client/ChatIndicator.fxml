@@ -6,20 +6,19 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="49.0" prefWidth="165.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="49.0" prefWidth="165.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.chatrmi.ui.client.ChatIndicatorController">
    <children>
-      <Label layoutX="7.0" layoutY="6.0" prefHeight="16.0" prefWidth="98.0" text="Cliente 2">
+      <Label fx:id="name" layoutX="7.0" layoutY="6.0" prefHeight="16.0" prefWidth="98.0" text="Cliente 2">
          <font>
             <Font size="10.0" />
          </font>
       </Label>
-      <Label layoutX="7.0" layoutY="21.0" prefHeight="23.0" prefWidth="152.0" text="Preview del mensaje...">
+      <Label fx:id="message" layoutX="7.0" layoutY="19.0" prefHeight="23.0" prefWidth="152.0" text="Preview del mensaje...">
          <font>
             <Font size="12.0" />
          </font>
       </Label>
-      <Circle fill="#1fff23" layoutX="151.0" layoutY="14.0" radius="5.0" stroke="#ffffffdb" strokeType="OUTSIDE" />
+      <Circle fx:id="indicator" fill="#1fff23" layoutX="151.0" layoutY="14.0" radius="5.0" stroke="#ffffffdb" strokeType="OUTSIDE" />
       <Separator layoutY="48.0" prefWidth="165.0" />
    </children>
 </AnchorPane>

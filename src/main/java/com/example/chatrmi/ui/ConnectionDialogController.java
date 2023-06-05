@@ -49,6 +49,10 @@ public class ConnectionDialogController implements Initializable {
         serverIP.setDisable(false);
         serverPort.setDisable(false);
         connectButton.setOnMouseClicked(event -> onButtonClicked());
+
+        serverIP.setText("127.0.0.1");
+        serverPort.setText("1099");
+        localPort.setText("1099");
     }
 
     public void onButtonClicked() {

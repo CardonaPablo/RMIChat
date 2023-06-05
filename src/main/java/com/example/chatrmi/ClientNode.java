@@ -17,7 +17,7 @@ public class ClientNode extends ChatNode {
 
     }
 
-    private ConnectionRegistry getServerConnection() {
+    public ConnectionRegistry getServerConnection() {
         for(ConnectionRegistry connection : connections) {
             if(connection.name.equals("server")) {
                 return connection;

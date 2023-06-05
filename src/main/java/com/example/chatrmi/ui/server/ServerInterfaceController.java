@@ -47,12 +47,12 @@ public class ServerInterfaceController extends UnicastRemoteObject implements Re
     public void writeToConsole(String message) {
         String timestamp = String.valueOf(java.time.LocalTime.now()).split("\\.")[0];
         timestamp = "[" + timestamp + "]";
-        console.appendText(timestamp + " " + message + ".\n");
+        console.appendText(timestamp + " " + message + "\n");
     }
 
     @Override
     public boolean startRemoteConnection(String ip, int port, String name) throws RemoteException {
-        writeToConsole(name + " connected\n");
+        writeToConsole(name + " connected");
         // Save client in connections
         serverNode.addConnection(ip, port, name);
         // Not needed to export endpoint

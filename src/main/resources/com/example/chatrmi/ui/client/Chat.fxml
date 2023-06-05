@@ -15,7 +15,6 @@
       <VBox alignment="BOTTOM_CENTER" layoutY="10.0" prefHeight="340.0" prefWidth="285.0">
          <children>
             <fx:include source="Message.fxml" />
-            <fx:include source="Message.fxml" />
          </children>
       </VBox>
       <Separator layoutY="350.0" prefWidth="285.0" />
