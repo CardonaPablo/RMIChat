@@ -42,6 +42,26 @@ public class ChatNode {
         return remoteInterface;
     }
 
+    protected RemoteChat getPublicRemoteNode(String name) throws RemoteException, NotBoundException {
+        // Find remote connection based on name
+        // Search for connection
+        int connectionIndex = -1;
+        for(int i = 0; i < connections.size(); i++) {
+            if(connections.get(i).name.equals(name)) {
+                connectionIndex = i;
+                break;
+            }
+        }
+        if(connectionIndex == -1) {
+            return null;
+        }
+        // Create remote connection
+        ConnectionRegistry connection = connections.get(connectionIndex);
+        Registry registry = LocateRegistry.getRegistry(connection.ip, connection.port);
+        RemoteChat remoteInterface = (RemoteChat) registry.lookup(connection.name);
+        return remoteInterface;
+    }
+
     // *********************************** Connection ***********************************
 
     /*
@@ -97,19 +117,17 @@ public class ChatNode {
 
     // *********************************** Messages ***********************************
 
-    void sendUnicastMessage(String message, String name) throws RemoteException, NotBoundException {
+    public void sendMessage(String message, ConnectionRegistry registry) throws RemoteException, NotBoundException {
         // Create remote connection
-        RemoteChat remoteInterface = getRemoteNode(name);
         // Send message
-        remoteInterface.receiveUnicastMessage(message);
+        if(registry.name.equals("server")) {
+            RemoteChat remoteInterface = getPublicRemoteNode(registry.name);
+            remoteInterface.receiveBroadcastMessage(message, getMyConnection().name);
+        } else {
+            RemoteChat remoteInterface = getRemoteNode(registry.name);
+            remoteInterface.receiveMessage(message);
+        }
     }
-
-    void sendBroadcastMessageToServer(String message) throws RemoteException, NotBoundException {
-        // Create remote connection
-        RemoteChat remoteInterface = getRemoteNode("Server");
-        remoteInterface.receiveBroadcastMessage(message, this.connections.get(0).name);
-    }
-
     public ConnectionRegistry getMyConnection() {
         return connections.get(0);
     }

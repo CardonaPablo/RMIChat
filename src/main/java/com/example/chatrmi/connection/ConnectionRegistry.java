@@ -2,6 +2,7 @@ package com.example.chatrmi.connection;
 
 import com.example.chatrmi.RemoteChat;
 
+import java.rmi.AlreadyBoundException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -34,11 +35,18 @@ public class ConnectionRegistry {
     }
 
 
-    public void exportEndpoint(String target, RemoteChat object) throws RemoteException {
-        // Export the InterfaceController remotely
+    public void exportPrivateEndpoint(String target, RemoteChat object) throws RemoteException {
+
+        // Test the registry
+        String endpoint = name + "-" + target;
         Registry registry = LocateRegistry.getRegistry(port);
-        registry.rebind(name + "-" + target, object);
-        System.err.println("Server listening...");
+        // Export the InterfaceController remotely
+        try {
+            registry.bind(endpoint, object);
+        } catch (RemoteException | AlreadyBoundException e) {
+            registry.rebind(endpoint, object);
+        }
+        System.out.println("Added private endpoint: " + endpoint);
     }
 
     public RemoteChat getRemoteNode() throws RemoteException, NotBoundException {

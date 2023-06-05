@@ -21,9 +21,7 @@ public class ServerNode extends ChatNode {
                RemoteChat remoteInterface = getRemoteNode(connection.name);
                remoteInterface.receiveBroadcastMessage(message, author);
            } catch (RemoteException e) {
-               throw new RuntimeException(e);
            } catch (NotBoundException e) {
-               throw new RuntimeException(e);
            }
        });
     }

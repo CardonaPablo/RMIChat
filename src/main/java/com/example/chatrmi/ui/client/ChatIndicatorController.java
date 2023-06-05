@@ -19,16 +19,14 @@ public class ChatIndicatorController {
         name.setText(registry.name);
         message.setText("Connected");
         indicator.setVisible(true);
-/*        root.setOnMouseClicked(event -> {
-            System.out.println("Clicked");
-            indicator.setVisible(false);
-        });*/
     }
 
     public void updateMessage(String message) {
         this.message.setText(message);
     }
-
+    public void updateName(String name) {
+        this.name.setText(name);
+    }
     public void updateIndicator(boolean connected) {
         indicator.setVisible(connected);
     }

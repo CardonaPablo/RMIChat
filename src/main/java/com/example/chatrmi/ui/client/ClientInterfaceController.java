@@ -3,24 +3,18 @@ package com.example.chatrmi.ui.client;
 import com.example.chatrmi.ClientNode;
 import com.example.chatrmi.RemoteChat;
 import com.example.chatrmi.connection.ConnectionRegistry;
-import com.example.chatrmi.ui.server.ServerInterfaceController;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 
 import java.net.UnknownHostException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class ClientInterfaceController extends UnicastRemoteObject implements RemoteChat {
 
@@ -32,6 +26,8 @@ public class ClientInterfaceController extends UnicastRemoteObject implements Re
     private Label nameLabel;
 
     ClientNode clientNode;
+
+    List<ChatController> chats = new ArrayList<>();
 
 
     public ClientInterfaceController() throws RemoteException {
@@ -47,15 +43,16 @@ public class ClientInterfaceController extends UnicastRemoteObject implements Re
         createChat(clientNode.getServerConnection());
     }
 
-    private void createChat(ConnectionRegistry registry) {
+    private void createChat(ConnectionRegistry registry) throws RemoteException {
         // Create the UI first then export the chat itself to the private endpoint
-        // Add the UI reference
-        // Create ChatIndicator
         ChatIndicatorController indicator = createChatIndicator(registry);
-        // Add ChatContainer to chat list
         ChatController chat = createChatContainer(registry);
-        // Export endpoint to allow server to call client UI
-        // clientNode.getMyConnection().exportEndpoint("server", chat);
+        chat.indicator = indicator;
+        chat.connection = registry;
+        chat.client = clientNode;
+        // Export endpoint to allow to call client UI
+        clientNode.getMyConnection().exportPrivateEndpoint(registry.name, chat);
+        chats.add(chat);
     }
 
     private ChatIndicatorController createChatIndicator(ConnectionRegistry registry) {
@@ -81,6 +78,7 @@ public class ClientInterfaceController extends UnicastRemoteObject implements Re
             Parent root = loader.load();
             ChatController controller = loader.getController();
             chatContainer.getChildren().add(root);
+            controller.initialize();
             return controller;
         } catch (Exception e) {
             e.printStackTrace();
@@ -101,9 +99,7 @@ public class ClientInterfaceController extends UnicastRemoteObject implements Re
     }
 
     @Override
-    public void receiveUnicastMessage(String message) throws RemoteException {
-
-    }
+    public void receiveMessage(String message) throws RemoteException {}
 
     @Override
     public void receiveBroadcastMessage(String message, String name) throws RemoteException {

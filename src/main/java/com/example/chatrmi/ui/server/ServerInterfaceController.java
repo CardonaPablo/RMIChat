@@ -39,11 +39,6 @@ public class ServerInterfaceController extends UnicastRemoteObject implements Re
     // Solo es invocado de manera pública
     // ****************************** Remoto ****************************** //
 
-    // SendBroadcastMessage
-    public void sendBroadcastMessage(String message, String senderName) throws RemoteException {
-        serverNode.sendBroadcastMessage(message, senderName);
-    }
-
     public void writeToConsole(String message) {
         String timestamp = String.valueOf(java.time.LocalTime.now()).split("\\.")[0];
         timestamp = "[" + timestamp + "]";
@@ -55,7 +50,7 @@ public class ServerInterfaceController extends UnicastRemoteObject implements Re
         writeToConsole(name + " connected");
         // Save client in connections
         serverNode.addConnection(ip, port, name);
-        // Not needed to export endpoint
+        // Not needed to export endpoint, use public endpoint
         return true;
     }
 
@@ -66,7 +61,11 @@ public class ServerInterfaceController extends UnicastRemoteObject implements Re
     }
 
     @Override
-    public void receiveUnicastMessage(String message) throws RemoteException {}
+    public void receiveMessage(String message) throws RemoteException {
+    }
     @Override
-    public void receiveBroadcastMessage(String message, String name) throws RemoteException {}
+    public void receiveBroadcastMessage(String message, String name) throws RemoteException {
+        writeToConsole("Received broadcast message from " + name + ": " + message);
+        serverNode.sendBroadcastMessage(message, name);
+    }
 }
