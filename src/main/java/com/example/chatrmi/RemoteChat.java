@@ -1,6 +1,6 @@
 package com.example.chatrmi;
 
-public interface RemoteChat {
+public interface RemoteChat extends java.rmi.Remote {
     /*
     * Recieves the connection data from the client.
     * After creating the connection

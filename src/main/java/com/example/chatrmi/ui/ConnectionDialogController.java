@@ -1,20 +1,17 @@
 package com.example.chatrmi.ui;
 
-import com.example.chatrmi.ClientNode;
-import com.example.chatrmi.ServerNode;
+import com.example.chatrmi.ui.client.ClientInterfaceController;
+import com.example.chatrmi.ui.server.ServerInterfaceController;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
-import java.net.InetAddress;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.rmi.RemoteException;
@@ -22,8 +19,6 @@ import java.util.ResourceBundle;
 
 public class ConnectionDialogController implements Initializable {
 
-    @FXML
-    private Parent root;
     @FXML
     private RadioButton clientRadio;
     @FXML
@@ -53,7 +48,6 @@ public class ConnectionDialogController implements Initializable {
         clientPort.setDisable(false);
         serverIP.setDisable(false);
         serverPort.setDisable(false);
-        localPort.setDisable(true);
         connectButton.setOnMouseClicked(event -> onButtonClicked());
     }
 
@@ -78,41 +72,42 @@ public class ConnectionDialogController implements Initializable {
     }
 
     private void startClient() throws UnknownHostException, RemoteException {
-        String ip = InetAddress.getLocalHost().getHostAddress();
-        int port = Integer.parseInt(clientPort.getText());
-        ClientNode client = new ClientNode(ip, port);
-        // Get the server data
+        int portClient = Integer.parseInt(clientPort.getText());
         String ipServer = serverIP.getText();
         int portServer = Integer.parseInt(serverPort.getText());
         String clientName = this.name.getText();
-                // Connect
-        // *TODO: Test in prod: client.startServerConnection(ipServer, portServer);
-        // Start the UI
-        // Get the controller and invoke a method to create companion classes inside controller
-        Stage stage = (Stage) root.getScene().getWindow();
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("ClientInterface.fxml"));
+
+        Stage stage = (Stage) connectButton.getScene().getWindow();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("client/ClientInterface.fxml"));
+
         try {
-            AnchorPane pane = loader.load();
+            Parent root = loader.load();
             ClientInterfaceController controller = loader.getController();
-            // TODO: Call method to create server connection inside controller
+            controller.initialize(ipServer, portServer, clientName, portClient);
+
             stage.setTitle("Chat - " + clientName);
-            stage.setScene(new Scene(pane));
+            stage.setScene(new Scene(root));
+            stage.show();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     private void startServer() throws RemoteException, UnknownHostException {
-        String ip = InetAddress.getLocalHost().getHostAddress();
         int port = Integer.parseInt(localPort.getText());
-        ServerNode server = new ServerNode(ip, port);
         // Start the UI
-        Stage stage = (Stage) root.getScene().getWindow();
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("ServerInterface.fxml"));
+        Stage stage = (Stage) connectButton.getScene().getWindow();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("server/ServerInterface.fxml"));
         try {
-            stage.setScene(new Scene(fxmlLoader.load()));
+            Parent root = loader.load();
+            ServerInterfaceController controller = loader.getController();
+            controller.initialize(port);
+            stage.setTitle("Server");
+            stage.setScene(new Scene(root));
+            stage.show();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
 }

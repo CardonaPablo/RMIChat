@@ -2,8 +2,9 @@ package com.example.chatrmi.connection;
 
 import com.example.chatrmi.RemoteChat;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.rmi.NotBoundException;
-import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -12,11 +13,13 @@ import java.util.List;
 
 public class ChatNode {
     public List<ConnectionRegistry> connections = new ArrayList<>();
-    protected ChatNode(String ip, int port) throws RemoteException {
+
+    protected ChatNode(String name, int port) throws RemoteException, UnknownHostException {
         // Register self
-        ConnectionRegistry myConnection = new ConnectionRegistry(ip, port);
+        String ip = InetAddress.getLocalHost().getHostAddress();
+        ConnectionRegistry myConnection = new ConnectionRegistry(ip, port, name, name);
         connections.add(myConnection);
-        // TODO: Export remote interface in default endpoint /
+
     }
 
     protected RemoteChat getRemoteNode(String name) throws RemoteException, NotBoundException {
@@ -48,12 +51,12 @@ public class ChatNode {
     * After being called, caller calls UI remote method locally to add the Chat UI
      */
     public boolean requestStartConnection(String ip, int port, String name) throws RemoteException, NotBoundException {
-        // TODO: Export interface with endpoint name here or before calling this
         ConnectionRegistry connection = new ConnectionRegistry(ip, port, name, name);
-        RemoteChat remoteInterface = getRemoteNode(name);
+        // Call public endpoint
+        RemoteChat remoteInterface = connection.getRemoteNode();
         connections.add(connection);
         // Send own information
-        boolean success = remoteInterface.startRemoteConnection(connections.get(0).ip, connections.get(0).port, connections.get(0).name);
+        boolean success = remoteInterface.startRemoteConnection(getMyConnection().ip, getMyConnection().port, getMyConnection().name);
         // TODO: Check if it really edits the array element or if it's a copy
         if(success)
             connection.endpoint = name + "-" + connections.get(0).name;
@@ -80,7 +83,6 @@ public class ChatNode {
         String endpoint = name + "-" + connections.get(0).name;
         ConnectionRegistry connection = new ConnectionRegistry(ip, port, endpoint, name);
         connections.add(connection);
-        // TODO: Export remote interface with endpoint name here or after calling this
     }
 
     public void removeConnection(String name) {
@@ -106,5 +108,9 @@ public class ChatNode {
         // Create remote connection
         RemoteChat remoteInterface = getRemoteNode("Server");
         remoteInterface.receiveBroadcastMessage(message, this.connections.get(0).name);
+    }
+
+    public ConnectionRegistry getMyConnection() {
+        return connections.get(0);
     }
 }

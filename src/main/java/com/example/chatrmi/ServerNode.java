@@ -2,6 +2,7 @@ package com.example.chatrmi;
 
 import com.example.chatrmi.connection.ChatNode;
 
+import java.net.UnknownHostException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -9,12 +10,13 @@ import java.util.List;
 
 public class ServerNode extends ChatNode {
 
-    public ServerNode(String ip, int port) throws RemoteException {
-        super(ip, port);
+    public ServerNode(int port) throws RemoteException, UnknownHostException {
+        super( "server", port);
     }
 
     public void sendBroadcastMessage(String message, String author) {
        connections.forEach(connection -> {
+           if(connection.name.equals("server")) return; // Skip server (this node)
            try {
                RemoteChat remoteInterface = getRemoteNode(connection.name);
                remoteInterface.receiveBroadcastMessage(message, author);
