@@ -23,7 +23,7 @@ public class ConnectionRegistry {
 
     public void exportPublicEndpoint(RemoteChat object) throws RemoteException {
         // Test the registry
-        Registry registry = LocateRegistry.getRegistry(port);
+        Registry registry = LocateRegistry.getRegistry(ip, port);
         // Export the InterfaceController remotely
         try {
             registry.rebind(endpoint, object);
