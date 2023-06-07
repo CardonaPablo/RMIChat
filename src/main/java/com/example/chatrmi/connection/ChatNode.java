@@ -34,14 +34,13 @@ public class ChatNode {
     String getMyIP() throws SocketException {
         Enumeration<NetworkInterface> nets = NetworkInterface.getNetworkInterfaces();
         for (NetworkInterface netint : Collections.list(nets)) {
-            System.out.println("Interface name: " + netint.getName());
-            System.out.println("IP address" + netint.getHardwareAddress());
             Enumeration<InetAddress> inetAddresses = netint.getInetAddresses();
             for (InetAddress inetAddress : Collections.list(inetAddresses)) {
-                System.out.printf("InetAddress: %s\n", inetAddress);
+                if(inetAddress.toString().contains("192.168."))
+                    return inetAddress.toString().substring(1);
             }
         }
-        return "192.168.0.22";
+        return null;
     }
     // *********************************** Connection ***********************************
 
