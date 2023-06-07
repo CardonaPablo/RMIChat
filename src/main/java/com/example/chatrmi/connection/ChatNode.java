@@ -21,66 +21,24 @@ public class ChatNode {
         connections.add(myConnection);
 
     }
-
-    protected RemoteChat getRemoteNode(String name) throws RemoteException, NotBoundException {
-        // Find remote connection based on name
-        // Search for connection
-        int connectionIndex = -1;
-        for(int i = 0; i < connections.size(); i++) {
-            if(connections.get(i).name.equals(name)) {
-                connectionIndex = i;
-                break;
-            }
-        }
-        if(connectionIndex == -1) {
-            return null;
-        }
-        // Create remote connection
-        ConnectionRegistry connection = connections.get(connectionIndex);
-        Registry registry = LocateRegistry.getRegistry(connection.ip, connection.port);
-        RemoteChat remoteInterface = (RemoteChat) registry.lookup(connection.endpoint);
-        return remoteInterface;
-    }
-
-    protected RemoteChat getPublicRemoteNode(String name) throws RemoteException, NotBoundException {
-        // Find remote connection based on name
-        // Search for connection
-        int connectionIndex = -1;
-        for(int i = 0; i < connections.size(); i++) {
-            if(connections.get(i).name.equals(name)) {
-                connectionIndex = i;
-                break;
-            }
-        }
-        if(connectionIndex == -1) {
-            return null;
-        }
-        // Create remote connection
-        ConnectionRegistry connection = connections.get(connectionIndex);
-        Registry registry = LocateRegistry.getRegistry(connection.ip, connection.port);
-        RemoteChat remoteInterface = (RemoteChat) registry.lookup(connection.name);
-        return remoteInterface;
-    }
-
     // *********************************** Connection ***********************************
 
     /*
-    * Called by the UI, recieves the connection with the data returned by the server parsed to a ConnectionRegistry
+    * Called by the UI, receives the connection with the data returned by the server parsed to a ConnectionRegistry
     * Requests a node to save the connection
     * If it's successfully saved, it's added to the list of connections
     * After being called, caller calls UI remote method locally to add the Chat UI
      */
-    public boolean requestStartConnection(String ip, int port, String name) throws RemoteException, NotBoundException {
+    public ConnectionRegistry requestStartConnection(String ip, int port, String name) throws RemoteException, NotBoundException {
         ConnectionRegistry connection = new ConnectionRegistry(ip, port, name, name);
         // Call public endpoint
-        RemoteChat remoteInterface = connection.getRemoteNode();
+        RemoteChat remoteInterface = connection.getRemotePrivateChat();
         connections.add(connection);
         // Send own information
         boolean success = remoteInterface.startRemoteConnection(getMyConnection().ip, getMyConnection().port, getMyConnection().name);
-        // TODO: Check if it really edits the array element or if it's a copy
         if(success)
             connection.endpoint = name + "-" + connections.get(0).name;
-        return success;
+        return connection;
     }
 
 
@@ -90,19 +48,21 @@ public class ChatNode {
      * If it's successfully saved, it's added to the list of connections
      * After being called, caller calls UI remote method locally to remove the Chat UI
      */
-    public void requestEndConnection(String name) throws RemoteException, NotBoundException {
+    public void requestEndConnection(ConnectionRegistry connection) throws RemoteException, NotBoundException {
         // Create remote connection
-        RemoteChat remoteInterface = getRemoteNode(name);
+        RemoteChat remoteInterface = connection.getRemotePrivateChat();
         // Send own information
-        boolean success = remoteInterface.endRemoteConnection(name);
+        // TODO: See if it's necessary to send the  name
+        boolean success = remoteInterface.endRemoteConnection(connection.name);
         if(success)
-            removeConnection(name);
+            removeConnection(connection.name);
     }
 
-    public void addConnection(String ip, int port, String name) {
+    public ConnectionRegistry addConnection(String ip, int port, String name) {
         String endpoint = name + "-" + connections.get(0).name;
         ConnectionRegistry connection = new ConnectionRegistry(ip, port, endpoint, name);
         connections.add(connection);
+        return connection;
     }
 
     public void removeConnection(String name) {
@@ -121,10 +81,10 @@ public class ChatNode {
         // Create remote connection
         // Send message
         if(registry.name.equals("server")) {
-            RemoteChat remoteInterface = getPublicRemoteNode(registry.name);
+            RemoteChat remoteInterface = registry.getPublicRemoteChat();
             remoteInterface.receiveBroadcastMessage(message, getMyConnection().name);
         } else {
-            RemoteChat remoteInterface = getRemoteNode(registry.name);
+            RemoteChat remoteInterface = registry.getRemotePrivateChat();
             remoteInterface.receiveMessage(message);
         }
     }

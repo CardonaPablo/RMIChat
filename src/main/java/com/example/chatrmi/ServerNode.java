@@ -18,7 +18,7 @@ public class ServerNode extends ChatNode {
        connections.forEach(connection -> {
            if(connection.name.equals("server")) return; // Skip server (this node)
            try {
-               RemoteChat remoteInterface = getRemoteNode(connection.name);
+               RemoteChat remoteInterface = connection.getRemotePrivateChat();
                remoteInterface.receiveBroadcastMessage(message, author);
            } catch (RemoteException e) {
            } catch (NotBoundException e) {

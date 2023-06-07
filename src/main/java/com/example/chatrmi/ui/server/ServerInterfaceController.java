@@ -10,6 +10,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.List;
 
 public class ServerInterfaceController extends UnicastRemoteObject implements RemoteChat {
 
@@ -36,7 +37,6 @@ public class ServerInterfaceController extends UnicastRemoteObject implements Re
         writeToConsole("Server started");
     }
 
-    // Solo es invocado de manera pública
     // ****************************** Remoto ****************************** //
 
     public void writeToConsole(String message) {
@@ -53,19 +53,21 @@ public class ServerInterfaceController extends UnicastRemoteObject implements Re
         // Not needed to export endpoint, use public endpoint
         return true;
     }
-
     @Override
     public boolean endRemoteConnection(String name) throws RemoteException {
         serverNode.removeConnection(name);
         return true;
     }
-
     @Override
-    public void receiveMessage(String message) throws RemoteException {
-    }
+    public void receiveMessage(String message) throws RemoteException {}
     @Override
     public void receiveBroadcastMessage(String message, String name) throws RemoteException {
         writeToConsole("Received broadcast message from " + name + ": " + message);
         serverNode.sendBroadcastMessage(message, name);
+    }
+
+    @Override
+    public List<String> getAllClients() {
+        return serverNode.getConnectionsInfo();
     }
 }

@@ -1,5 +1,7 @@
 package com.example.chatrmi;
 
+import java.util.List;
+
 public interface RemoteChat extends java.rmi.Remote {
     /*
     * Recieves the connection data from the client.
@@ -12,5 +14,6 @@ public interface RemoteChat extends java.rmi.Remote {
     public void receiveMessage(String message) throws java.rmi.RemoteException;
     // Recibe a través de connectionRegistry con server
     public void receiveBroadcastMessage(String message, String name) throws java.rmi.RemoteException;
+    public List<String> getAllClients() throws java.rmi.RemoteException;
 
 }

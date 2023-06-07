@@ -53,6 +53,17 @@ public class ConnectionDialogController implements Initializable {
         serverIP.setText("127.0.0.1");
         serverPort.setText("1099");
         localPort.setText("1099");
+
+        clientRadio.onMouseClickedProperty().set(event -> {
+            if(clientRadio.isSelected()) {
+                serverRadio.setSelected(false);
+            }
+        });
+        serverRadio.onMouseClickedProperty().set(event -> {
+            if(serverRadio.isSelected()) {
+                clientRadio.setSelected(false);
+            }
+        });
     }
 
     public void onButtonClicked() {

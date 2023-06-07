@@ -49,9 +49,15 @@ public class ConnectionRegistry {
         System.out.println("Added private endpoint: " + endpoint);
     }
 
-    public RemoteChat getRemoteNode() throws RemoteException, NotBoundException {
+    public RemoteChat getRemotePrivateChat() throws RemoteException, NotBoundException {
         Registry registry = LocateRegistry.getRegistry(ip, port);
         RemoteChat remoteInterface = (RemoteChat) registry.lookup(endpoint);
+        return remoteInterface;
+    }
+
+    public RemoteChat getPublicRemoteChat() throws RemoteException, NotBoundException {
+        Registry registry = LocateRegistry.getRegistry(ip, port);
+        RemoteChat remoteInterface = (RemoteChat) registry.lookup(name);
         return remoteInterface;
     }
 }

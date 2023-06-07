@@ -16,6 +16,12 @@ public class ChatIndicatorController {
     private Circle indicator;
 
     public void initialize(ConnectionRegistry registry) {
+        if(registry.name.equals("server")) {
+            name.setText("Group");
+            message.setText("Connected");
+            indicator.setVisible(true);
+            return;
+        }
         name.setText(registry.name);
         message.setText("Connected");
         indicator.setVisible(true);
