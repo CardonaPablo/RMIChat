@@ -28,6 +28,7 @@ public class ConnectionRegistry {
         try {
             registry.rebind(endpoint, object);
         } catch (RemoteException e) {
+            System.out.println("Not found, creating in port: " + port);
             registry = LocateRegistry.createRegistry(port);
             registry.rebind(name, object);
         }
