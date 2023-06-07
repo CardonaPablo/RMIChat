@@ -54,7 +54,7 @@ public class ChatNode {
     public ConnectionRegistry requestStartConnection(String ip, int port, String name) throws RemoteException, NotBoundException {
         ConnectionRegistry connection = new ConnectionRegistry(ip, port, name, name);
         // Call public endpoint
-        System.out.println("Requesting to: " + connection.ip);
+        System.out.println("Requesting to: " + connection.ip + ":" + port);
         RemoteChat remoteInterface = connection.getPublicRemoteChat();
         connections.add(connection);
         // Send own information

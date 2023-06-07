@@ -57,6 +57,7 @@ public class ConnectionRegistry {
     }
 
     public RemoteChat getPublicRemoteChat() throws RemoteException, NotBoundException {
+        System.out.println("Require registry to :" + ip + ":" + port );
         Registry registry = LocateRegistry.getRegistry(ip, port);
         RemoteChat remoteInterface = (RemoteChat) registry.lookup(name);
         return remoteInterface;
