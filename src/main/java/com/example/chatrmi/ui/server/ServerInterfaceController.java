@@ -47,7 +47,7 @@ public class ServerInterfaceController extends UnicastRemoteObject implements Re
 
     @Override
     public boolean startRemoteConnection(String ip, int port, String name) throws RemoteException {
-        writeToConsole(name + " connected");
+        writeToConsole(name + "(" + ip + ") connected");
         // Save client in connections
         serverNode.addConnection(ip, port, name);
         // Not needed to export endpoint, use public endpoint

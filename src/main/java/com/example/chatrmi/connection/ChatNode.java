@@ -34,9 +34,9 @@ public class ChatNode {
     String getMyIP() throws SocketException {
         Enumeration<NetworkInterface> nets = NetworkInterface.getNetworkInterfaces();
         for (NetworkInterface netint : Collections.list(nets)) {
+            System.out.println("Interface name: " + netint.getName());
             System.out.println("IP address" + netint.getHardwareAddress());
             Enumeration<InetAddress> inetAddresses = netint.getInetAddresses();
-
             for (InetAddress inetAddress : Collections.list(inetAddresses)) {
                 System.out.printf("InetAddress: %s\n", inetAddress);
             }
@@ -54,7 +54,7 @@ public class ChatNode {
     public ConnectionRegistry requestStartConnection(String ip, int port, String name) throws RemoteException, NotBoundException {
         ConnectionRegistry connection = new ConnectionRegistry(ip, port, name, name);
         // Call public endpoint
-        RemoteChat remoteInterface = connection.getRemotePrivateChat();
+        RemoteChat remoteInterface = name.equals("server") ? connection.getPublicRemoteChat() : connection.getRemotePrivateChat();
         connections.add(connection);
         // Send own information
         boolean success = remoteInterface.startRemoteConnection(getMyConnection().ip, getMyConnection().port, getMyConnection().name);
@@ -105,7 +105,7 @@ public class ChatNode {
         if(registry.name.equals("server")) {
             RemoteChat remoteInterface = registry.getPublicRemoteChat();
             remoteInterface.receiveBroadcastMessage(message, getMyConnection().name);
-        } else {
+       } else {
             RemoteChat remoteInterface = registry.getRemotePrivateChat();
             remoteInterface.receiveMessage(message);
         }
