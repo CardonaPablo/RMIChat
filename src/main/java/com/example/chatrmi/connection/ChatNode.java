@@ -3,12 +3,16 @@ package com.example.chatrmi.connection;
 import com.example.chatrmi.RemoteChat;
 
 import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Enumeration;
 import java.util.List;
 
 public class ChatNode {
@@ -16,10 +20,28 @@ public class ChatNode {
 
     protected ChatNode(String name, int port) throws RemoteException, UnknownHostException {
         // Register self
-        String ip = InetAddress.getLocalHost().getHostAddress();
+        String ip = null;
+        try {
+            ip = getMyIP();
+        } catch (SocketException e) {
+            throw new RuntimeException(e);
+        }
         ConnectionRegistry myConnection = new ConnectionRegistry(ip, port, name, name);
         connections.add(myConnection);
 
+    }
+
+    String getMyIP() throws SocketException {
+        Enumeration<NetworkInterface> nets = NetworkInterface.getNetworkInterfaces();
+        for (NetworkInterface netint : Collections.list(nets)) {
+            System.out.println("IP address" + netint.getHardwareAddress());
+            Enumeration<InetAddress> inetAddresses = netint.getInetAddresses();
+
+            for (InetAddress inetAddress : Collections.list(inetAddresses)) {
+                System.out.printf("InetAddress: %s\n", inetAddress);
+            }
+        }
+        return "192.168.0.22";
     }
     // *********************************** Connection ***********************************
 
