@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="81.0" prefWidth="165.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.chatrmi.ui.client.NewChatSelectorController">
+   <children>
+      <Button fx:id="connectButton" layoutX="45.0" layoutY="48.0" mnemonicParsing="false" text="Conectar" />
+      <ComboBox fx:id="clientSelector" layoutX="8.0" layoutY="14.0" prefWidth="150.0" promptText="Seleccionar" />
+   </children>
+</AnchorPane>
