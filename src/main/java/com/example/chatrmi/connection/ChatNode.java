@@ -23,6 +23,7 @@ public class ChatNode {
         String ip = null;
         try {
             ip = getMyIP();
+            System.setProperty("java.rmi.server.hostname", ip);
         } catch (SocketException e) {
             throw new RuntimeException(e);
         }

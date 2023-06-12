@@ -26,7 +26,7 @@ public class ConnectionRegistry {
         Registry registry = LocateRegistry.getRegistry(ip, port);
         // Export the InterfaceController remotely
         try {
-            registry.rebind(endpoint, object);
+            registry.rebind(name, object);
         } catch (RemoteException e) {
             System.out.println("Not found, creating in port: " + port);
             registry = LocateRegistry.createRegistry(port);
@@ -45,6 +45,7 @@ public class ConnectionRegistry {
         try {
             registry.bind(endpoint, object);
         } catch (RemoteException | AlreadyBoundException e) {
+            registry = LocateRegistry.createRegistry(port);
             registry.rebind(endpoint, object);
         }
         System.out.println("Added private endpoint: " + endpoint);
